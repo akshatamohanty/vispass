@@ -1,0 +1,39 @@
+@import 'https://fonts.googleapis.com/css?family=Raleway:200,400,900';
+
+html, body{
+	width: 300px;
+	height: 380px;
+	text-align: center;
+
+	margin-left: 20px;
+	margin-top: 20px;
+
+	overflow: hidden;
+}
+
+#setPass{
+
+	width: 200px;
+	height: 40px;
+	margin: 10px;
+	padding: 5px;
+	line-height: 30px;
+
+	background-color: #2C45AF;
+	text-transform: uppercase;
+	font-size: 16px;
+	border-radius: none;
+	outline: none;
+
+}
+
+.box:hover{
+	background-color: grey;
+}
+
+.selected{
+	
+	background-color: grey !important; 
+	color: black;
+	line-height: 40px;
+}

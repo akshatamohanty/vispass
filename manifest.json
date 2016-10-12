@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+
+  "name": "VisPass PlugIn",
+  "description": "This extension allows for a visual passwordin all your chrome accounts",
+  "version": "0.0.1",
+
+  "browser_action": {
+   "default_popup": "popup.html"
+  },
+
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
+  },
+
+  "content_scripts": [
+  {
+    "matches": ["http://*/*", "https://*/*"],
+    "js": ["./scripts/jquery-3.1.1.min.js", "./scripts/content-script.js"],
+    "run_at": "document_end",
+    "all_frames": true
+  }],
+
+  "permissions": [
+   "storage",
+   "http://*/*", "https://*/*",
+   "tabs"
+   ]
+}
