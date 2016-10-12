@@ -1,14 +1,16 @@
-$('input:password').hide();
+var $form = $(':password').closest('form');
+$form.children().hide();
 
-console.log("Content Script Loaded");
+var message = $('<h3>Locked By VisPass</h3>')
+$form.append(message);
 
+console.log($form);
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-
-    	console.log("Password Correct");
     	
-    	$(":password" ).show();
+		$form.children().show();
+		message.remove();
 
         sendResponse({farewell: "goodbye"})
 	});

@@ -2,14 +2,24 @@ $(document).ready(function(){
 
       var sequence = [];
       var password;
+      var res;
 
       // get password from storage
       chrome.storage.sync.get(function(items) {   
-        password = items.vispass   
-        if(password === undefined){
-          password = [0, 1, 2, 3, 4, 5, 6];
-          chrome.storage.sync.set({'vispass': password});
-        }
+          
+          password = items.vispass.pass;   
+          res = items.vispass.res;
+
+          if(password === undefined || res === undefined){
+            //alert("Password has not been set. Please set your password from options.");
+            //close();
+          }
+
+          if(password === undefined)
+            password = [0, 1, 2, 3]
+          if(res === undefined)
+            res = 0;
+
       });
       
       // get background image from storage
@@ -64,8 +74,34 @@ $(document).ready(function(){
 
       function checkPass(){
 
+          var flag = true;
+
+          for(var i=0; i < password.length; i++){
+
+              // it's a 7x6 grid
+              // 0 1 2 3 4 5 6 
+              // 7 8 9 10 11 12 13
+              // 14 15 16 17 18 19
+              // 20 21 22 23 24 25 26
+              // 27 28 29 30 31 32 33
+              // 34 35 36 37 38 39 40 
+              // 41 42
+              var elementPos = $('#' + password[i]).position();
+              var targetPos = $('#' + sequence[i]).position();
+
+              if( Math.abs(elementPos.left - targetPos.left) > 40*(res+1) || Math.abs(elementPos.top - targetPos.top) > 40*(res+1)){
+
+                    flag = false; 
+                    break;
+
+              }
+              
+
+
+          }
+
           // compare sequence & password
-          if(sequence.equals(password)){
+          if(flag){
 
             // select all form elements and enable autocomplete
             //alert('Correct!');
@@ -83,41 +119,9 @@ $(document).ready(function(){
           
       }
 
+
+
 })
 
 
 
-
-/*
- *  Array comparison solution
- */
-// http://stackoverflow.com/questions/7837456/how-to-compare-arrays-in-javascript
-// Warn if overriding existing method
-if(Array.prototype.equals)
-    console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
-// attach the .equals method to Array's prototype to call it on any array
-Array.prototype.equals = function (array) {
-    // if the other array is a falsy value, return
-    if (!array)
-        return false;
-
-    // compare lengths - can save a lot of time 
-    if (this.length != array.length)
-        return false;
-
-    for (var i = 0, l=this.length; i < l; i++) {
-        // Check if we have nested arrays
-        if (this[i] instanceof Array && array[i] instanceof Array) {
-            // recurse into the nested arrays
-            if (!this[i].equals(array[i]))
-                return false;       
-        }           
-        else if (this[i] != array[i]) { 
-            // Warning - two different object instances will never be equal: {x:20} != {x:20}
-            return false;   
-        }           
-    }       
-    return true;
-}
-// Hide method from for-in loops
-Object.defineProperty(Array.prototype, "equals", {enumerable: false});

@@ -2,12 +2,25 @@ $(document).ready(function(){
 
   // get password from storage or use default
   var password; 
+  var res; 
   chrome.storage.sync.get(function(items) {   
-    password = items.vispass;
-    if(password === undefined) 
-      password = [0, 1, 2, 3, 4, 5, 6]; 
+    
+        if(items.vispass === undefined){
+          items.vispass = { 'pass': [0, 1, 2, 3], 'res': 0 }
+        }
 
-    resetIndices();  
+        password = items.vispass.pass;
+        res = items.vispass.res;
+
+        if(password === undefined) 
+          password = [0, 1, 2, 3]; 
+        if(res === undefined)
+          res = 0;
+
+        // select the resolution
+        $('#res'+res).addClass('res-selected');  
+
+        resetIndices();  
   });
 
 	var container = $('.container');
@@ -66,16 +79,37 @@ $(document).ready(function(){
 
 	})
 
+  $('.res-btn').click(function(e){
+
+      // remove class from others
+      $('#res'+res).removeClass('res-selected');
+
+      res = parseInt(e.target.id[3]); 
+      $('#res'+res).addClass('res-selected');
+
+      save();
+
+  })
+
   $('#setPass').click(function(){
-		// save password
-		// 
-		console.log(password);
-		chrome.storage.sync.set({'vispass': password}, function() {
-	          // Notify that we saved.
-	          console.log('Settings saved', password);
-        });
+		
+      save();
+      window.close();
 
 	})
+
+  function save(){
+
+    var json = {
+          'pass': password,
+          'res' : res
+    }
+    chrome.storage.sync.set({'vispass': json } , function() {
+            // Notify that we saved.
+            console.log('Settings saved', json);
+            
+        });    
+  }
 
 
 });
