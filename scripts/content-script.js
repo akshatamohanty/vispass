@@ -1,16 +1,15 @@
-var $form = $(':password').closest('form');
-$form.children().hide();
+var $btn = $(':password').closest('form').find(':submit');
+$btn.prop('disabled', true);
 
-var message = $('<h3>Locked By VisPass</h3>')
-$form.append(message);
+var message = $btn.val();
+$btn.val("Locked By VisPass");
 
-console.log($form);
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-    	
-		$form.children().show();
-		message.remove();
+
+		$btn.prop('disabled', false);
+		$btn.val(message);
 
         sendResponse({farewell: "goodbye"})
 	});
